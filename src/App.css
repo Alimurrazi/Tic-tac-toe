@@ -13,6 +13,11 @@
   }
 }
 
+.winning-cell {
+  color: green;
+  font-size: 40px;
+}
+
 .App-content {
   background-color: #282c34;
   min-height: 100vh;
