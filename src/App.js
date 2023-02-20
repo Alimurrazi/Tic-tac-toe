@@ -1,6 +1,7 @@
 import "./App.css";
 import Cell from "./Cell";
 import { useState,useEffect } from "react";
+import { PrimaryButton } from '@fluentui/react/lib/Button';
 
 const checkIfGameOver = (board) => {
   let result = {
@@ -94,6 +95,7 @@ function App() {
   const [isFirstPlayer, setIsFirstPlayer] = useState(true);
   const [winStatus, setWinStatus] = useState(false);
   const [winningCells, setWinningCells] = useState([]);
+  const [isReset, setIsRest] = useState(false);
   useEffect(()=>{
     console.log(cellStates);
     const result = checkIfGameOver(cellStates);
@@ -106,14 +108,22 @@ function App() {
       } else {
         setIsFirstPlayer(true);
       }
+      setIsRest(false);
     }
   },[cellStates])
 
   useEffect(()=>{
-    if(winStatus) {
-      console.log(isFirstPlayer);
-    }
-  },[winStatus, isFirstPlayer]);
+    console.log(isFirstPlayer);
+  },[isFirstPlayer]);
+
+  const reset=()=>{
+    console.log('reset...');
+    setIsRest(true);
+    setCellStates(cellData);
+    setIsFirstPlayer(true);
+    setWinStatus(false);
+    setWinningCells([]);
+  }
 
   return (
     <div className="App">
@@ -133,12 +143,15 @@ function App() {
                 <Cell key={col.id} columnId={col.id}
                 cellClass={winStatus && winningCells.includes(col.id) ? 'cell winning-cell': 'cell'}
                 cellStates={cellStates} setCellStates={setCellStates} isFirstPlayer={isFirstPlayer}
-                winStatus={winStatus}>
+                winStatus={winStatus} isReset={isReset}>
                 </Cell>
               ))}
             </div>
           ))}
         </div>
+
+        <PrimaryButton text="Primary" onClick={()=>reset()} allowDisabledFocus />
+
       </div>
     </div>
   );

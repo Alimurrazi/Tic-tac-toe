@@ -1,14 +1,21 @@
 import { useEffect, useState } from "react";
 import "./Cell.css";
 
-function Cell({ columnId, cellStates, setCellStates, isFirstPlayer, winStatus, cellClass }) {
-  let isChecked = false;
+function Cell({ columnId, cellStates, setCellStates, isFirstPlayer, winStatus, cellClass, isReset }) {
   const [cellValue, setCellValue] = useState("");
   const [rowNo, setRowNo] = useState(1);
   const [indexNo, setIndexNo] = useState(0);
 
+  useEffect(()=>{
+    if(isReset) {
+      setCellValue("");
+      setRowNo(1);
+      setIndexNo(0);
+    }
+  },[isReset]);
+
   function updateValue() {
-    if (!isChecked && !winStatus) {
+    if (!winStatus) {
       const rowNumber = Math.floor(columnId / 10);
       const index = cellStates[rowNumber - 1].columns.findIndex(
         (column) => column.id === columnId
