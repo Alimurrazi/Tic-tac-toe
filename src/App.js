@@ -13,7 +13,7 @@ const checkIfGameOver = (board) => {
     if (
       board[i].columns[0].value !== "" &&
       board[i].columns[0].value === board[i].columns[1].value &&
-      board[i].columns[1].value === board[i][2].value
+      board[i].columns[1].value === board[i].columns[2].value
     ) {
       result = {
         status: true,
@@ -64,7 +64,7 @@ const checkIfGameOver = (board) => {
 };
 
 function App() {
-  let cellData = [
+  let initialCellData = [
     {
       rowId: 1,
       columns: [
@@ -91,36 +91,27 @@ function App() {
     },
   ];
 
-  const [cellStates, setCellStates] = useState(cellData);
+  const [cellStates, setCellStates] = useState(initialCellData);
   const [isFirstPlayer, setIsFirstPlayer] = useState(true);
   const [winStatus, setWinStatus] = useState(false);
   const [winningCells, setWinningCells] = useState([]);
-  const [isReset, setIsRest] = useState(false);
+  const [isReset, setIsReset] = useState(false);
   useEffect(()=>{
-    console.log(cellStates);
     const result = checkIfGameOver(cellStates);
     if(result.status) {
       setWinStatus(true);
       setWinningCells(result.winningCells);
     } else {
-      if(isFirstPlayer) {
-        setIsFirstPlayer(false);
-      } else {
-        setIsFirstPlayer(true);
+      if (!isReset) {
+        setIsFirstPlayer(prevState => !prevState);
       }
-      setIsRest(false);
+      setIsReset(false);
     }
-  },[cellStates])
+  },[cellStates,isReset])
 
-  useEffect(()=>{
-    console.log(isFirstPlayer);
-  },[isFirstPlayer]);
-
-  const reset=()=>{
-    console.log('reset...');
-    setIsRest(true);
-    setCellStates(cellData);
-    setIsFirstPlayer(true);
+  const handleReset=()=>{
+    setIsReset(true);
+    setCellStates(initialCellData);
     setWinStatus(false);
     setWinningCells([]);
   }
@@ -137,7 +128,7 @@ function App() {
         </div>
 
         <div className="board">
-          {cellData.map((row) => (
+          {initialCellData.map((row) => (
             <div className="row" key={row.rowId}>
               {row.columns.map((col) => (
                 <Cell key={col.id} columnId={col.id}
@@ -150,7 +141,7 @@ function App() {
           ))}
         </div>
 
-        <PrimaryButton text="Primary" onClick={()=>reset()} allowDisabledFocus />
+        <PrimaryButton text="Reset" onClick={()=>handleReset()} allowDisabledFocus />
 
       </div>
     </div>

@@ -3,27 +3,25 @@ import "./Cell.css";
 
 function Cell({ columnId, cellStates, setCellStates, isFirstPlayer, winStatus, cellClass, isReset }) {
   const [cellValue, setCellValue] = useState("");
-  const [rowNo, setRowNo] = useState(1);
-  const [indexNo, setIndexNo] = useState(0);
+  const [rowNumber, setRowNumber] = useState(1);
+  const [columnNumber, setColumnNumber] = useState(0);
 
   useEffect(()=>{
     if(isReset) {
       setCellValue("");
-      setRowNo(1);
-      setIndexNo(0);
     }
   },[isReset]);
 
   function updateValue() {
     if (!winStatus) {
-      const rowNumber = Math.floor(columnId / 10);
-      const index = cellStates[rowNumber - 1].columns.findIndex(
+      const rowNo = Math.floor(columnId / 10);
+      const index = cellStates[rowNo - 1].columns.findIndex(
         (column) => column.id === columnId
       );
-      const value = cellStates[rowNumber - 1].columns[index].value;
+      const value = cellStates[rowNo - 1].columns[index].value;
       if (!value) {
-        setRowNo(rowNumber);
-        setIndexNo(index);
+        setRowNumber(rowNo);
+        setColumnNumber(index);
         if(isFirstPlayer) {
           setCellValue("X");
         } else {
@@ -34,10 +32,10 @@ function Cell({ columnId, cellStates, setCellStates, isFirstPlayer, winStatus, c
   }
 
   useEffect(()=>{
-    const updatedState = JSON.parse(JSON.stringify(cellStates));
-    updatedState[rowNo - 1].columns[indexNo].value = cellValue;
+    const updatedState = [...cellStates];
+    updatedState[rowNumber - 1].columns[columnNumber].value = cellValue;
     setCellStates(updatedState);
-  },[cellValue, indexNo, rowNo]);
+  },[cellValue, columnNumber, rowNumber]);
 
   return (
     <div className={cellClass} onClick={() => updateValue()}>
