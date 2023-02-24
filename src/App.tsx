@@ -2,11 +2,13 @@ import "./App.css";
 import Cell from "./Cell";
 import { useState,useEffect } from "react";
 import { PrimaryButton } from '@fluentui/react/lib/Button';
+import React from "react";
+import { BoardRow } from "./Types/Board.interface";
 
 const checkIfGameOver = (board) => {
   let result = {
     status: false,
-    winningCells: []
+    winningCells: [] as Number[]
   }
   // Check if any row has the same value
   for (let i = 0; i < 3; i++) {
@@ -64,7 +66,7 @@ const checkIfGameOver = (board) => {
 };
 
 function App() {
-  let initialCellData = [
+  let initialCellData:BoardRow[] = [
     {
       rowId: 1,
       columns: [
@@ -94,7 +96,7 @@ function App() {
   const [cellStates, setCellStates] = useState(initialCellData);
   const [isFirstPlayer, setIsFirstPlayer] = useState(true);
   const [winStatus, setWinStatus] = useState(false);
-  const [winningCells, setWinningCells] = useState([]);
+  const [winningCells, setWinningCells] = useState<Number[]>([]);
   const [isReset, setIsReset] = useState(false);
   useEffect(()=>{
     const result = checkIfGameOver(cellStates);
@@ -129,9 +131,9 @@ function App() {
 
         <div className="board">
           {initialCellData.map((row) => (
-            <div className="row" key={row.rowId}>
+            <div className="row" key={row.rowId.toString()}>
               {row.columns.map((col) => (
-                <Cell key={col.id} columnId={col.id}
+                <Cell key={col.id.toString()} columnId={col.id}
                 cellClass={winStatus && winningCells.includes(col.id) ? 'cell winning-cell': 'cell'}
                 cellStates={cellStates} setCellStates={setCellStates} isFirstPlayer={isFirstPlayer}
                 winStatus={winStatus} isReset={isReset}>
