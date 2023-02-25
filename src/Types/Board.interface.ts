@@ -1,9 +1,9 @@
 export interface BoardColumn {
-    id: Number,
-    value: String
+    id: number,
+    value: string
 }
 
 export interface BoardRow {
-    rowId: Number,
+    rowId: number,
     columns: BoardColumn[]
 }

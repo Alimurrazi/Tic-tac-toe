@@ -4,11 +4,12 @@ import { useState,useEffect } from "react";
 import { PrimaryButton } from '@fluentui/react/lib/Button';
 import React from "react";
 import { BoardRow } from "./Types/Board.interface";
+import initialCellData from "./Data/Constants";
 
-const checkIfGameOver = (board) => {
+const checkIsGameOver = (board: BoardRow[]) => {
   let result = {
     status: false,
-    winningCells: [] as Number[]
+    winningCells: [] as number[]
   }
   // Check if any row has the same value
   for (let i = 0; i < 3; i++) {
@@ -66,47 +67,19 @@ const checkIfGameOver = (board) => {
 };
 
 function App() {
-  let initialCellData:BoardRow[] = [
-    {
-      rowId: 1,
-      columns: [
-        { id: 11, value: "" },
-        { id: 12, value: "" },
-        { id: 13, value: "" },
-      ],
-    },
-    {
-      rowId: 2,
-      columns: [
-        { id: 21, value: "" },
-        { id: 22, value: "" },
-        { id: 23, value: "" },
-      ],
-    },
-    {
-      rowId: 3,
-      columns: [
-        { id: 31, value: "" },
-        { id: 32, value: "" },
-        { id: 33, value: "" },
-      ],
-    },
-  ];
-
   const [cellStates, setCellStates] = useState(initialCellData);
   const [isFirstPlayer, setIsFirstPlayer] = useState(true);
   const [winStatus, setWinStatus] = useState(false);
-  const [winningCells, setWinningCells] = useState<Number[]>([]);
+  const [winningCells, setWinningCells] = useState<number[]>([]);
   const [isReset, setIsReset] = useState(false);
   useEffect(()=>{
-    const result = checkIfGameOver(cellStates);
+    const result = checkIsGameOver(cellStates);
     if(result.status) {
       setWinStatus(true);
       setWinningCells(result.winningCells);
-    } else {
-      if (!isReset) {
-        setIsFirstPlayer(prevState => !prevState);
-      }
+      setIsFirstPlayer(prevState => !prevState);
+    } 
+    else {
       setIsReset(false);
     }
   },[cellStates,isReset])
@@ -135,9 +108,8 @@ function App() {
               {row.columns.map((col) => (
                 <Cell key={col.id.toString()} columnId={col.id}
                 cellClass={winStatus && winningCells.includes(col.id) ? 'cell winning-cell': 'cell'}
-                cellStates={cellStates} setCellStates={setCellStates} isFirstPlayer={isFirstPlayer}
-                winStatus={winStatus} isReset={isReset}>
-                </Cell>
+                cellStates={cellStates} setCellStates={setCellStates} isFirstPlayer={isFirstPlayer} setIsFirstPlayer={setIsFirstPlayer}
+                winStatus={winStatus} isReset={isReset}/>
               ))}
             </div>
           ))}
